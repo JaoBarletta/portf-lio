@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Sora:wght@400;500;600;700&display=swap');
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+}
+
+body {
+	font-family: 'Sora', 'Segoe UI', sans-serif;
+	background: #050711;
+	color: #eef0ff;
+	line-height: 1.45;
+}
+
+h1,
+h2,
+h3,
+.brand {
+	font-family: 'Orbitron', 'Sora', sans-serif;
+}

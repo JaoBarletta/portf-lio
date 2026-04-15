@@ -1,0 +1,263 @@
+<div class="portfolio-page">
+  <div class="bg-layer" aria-hidden="true">
+    <div class="aurora aurora-a"></div>
+    <div class="aurora aurora-b"></div>
+    <div class="aurora-band aurora-band-a"></div>
+    <div class="aurora-band aurora-band-b"></div>
+    <div class="aurora-band aurora-band-c"></div>
+    <div class="grid-overlay"></div>
+    @for (particle of particles; track particle) {
+      <span class="particle" [style.--index]="particle"></span>
+    }
+  </div>
+
+  <header class="topbar">
+    <p class="brand">JOAO SILVA</p>
+
+    <div class="language-switch" role="group" aria-label="Language selector">
+      <button
+        type="button"
+        [class.active]="language() === 'pt'"
+        (click)="setLanguage('pt')"
+      >
+        PT-BR
+      </button>
+      <button
+        type="button"
+        [class.active]="language() === 'en'"
+        (click)="setLanguage('en')"
+      >
+        EN
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" data-topic="hero" class="hero section topic-hero" [class.in-view]="isTopicVisible('hero')">
+      <p class="hero-welcome">{{ t().heroWelcome }}</p>
+      <h1 class="hero-name">{{ t().heroName }}</h1>
+      <p class="eyebrow">{{ t().role }}</p>
+      <h2 class="hero-role">{{ t().heroTitleAccent }}</h2>
+      <p class="hero-text">{{ t().heroSubtitle }}</p>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#contato">{{ t().ctaPrimary }}</a>
+        <a class="btn btn-secondary" href="#projetos">{{ t().ctaSecondary }}</a>
+      </div>
+    </section>
+
+    <aside
+      class="floating-dock"
+      [style.--active-index]="activeDockIndex()"
+      [attr.aria-label]="t().dockLabel"
+    >
+      <a
+        href="#inicio"
+        [class.active]="isActiveSection('inicio')"
+        (click)="setActiveSection('inicio')"
+        aria-label="Home"
+      >
+        ⌂
+      </a>
+      <a
+        href="#sobre"
+        [class.active]="isActiveSection('sobre')"
+        (click)="setActiveSection('sobre')"
+        [attr.aria-label]="t().nav[1]"
+      >
+        ◌
+      </a>
+      <a
+        href="#projetos"
+        [class.active]="isActiveSection('projetos')"
+        (click)="setActiveSection('projetos')"
+        [attr.aria-label]="t().nav[2]"
+      >
+        ▦
+      </a>
+      <a
+        href="#stack"
+        [class.active]="isActiveSection('stack')"
+        (click)="setActiveSection('stack')"
+        [attr.aria-label]="t().nav[3]"
+      >
+        ⌘
+      </a>
+      <a
+        href="#experiencia"
+        [class.active]="isActiveSection('experiencia')"
+        (click)="setActiveSection('experiencia')"
+        [attr.aria-label]="t().nav[4]"
+      >
+        ◇
+      </a>
+      <a
+        href="#contato"
+        [class.active]="isActiveSection('contato')"
+        (click)="setActiveSection('contato')"
+        [attr.aria-label]="t().nav[5]"
+      >
+        ✉
+      </a>
+    </aside>
+
+    <section id="sobre" data-topic="about" class="section reveal topic-about" [class.in-view]="isTopicVisible('about')">
+      <p class="section-label">{{ t().aboutLabel }}</p>
+      <h2>{{ t().aboutTitle }}</h2>
+      <div class="about-container">
+        <div class="about-text">
+          <p>{{ t().aboutText }}</p>
+          <div class="about-meta" aria-label="About highlights">
+            <span>{{ t().aboutLocation }}</span>
+            <span>{{ t().aboutExperience }}</span>
+          </div>
+        </div>
+        <div class="about-image">
+          <img src="/profile.jpeg" alt="João Victor Barletta" />
+        </div>
+      </div>
+    </section>
+
+    <section id="projetos" data-topic="projects" class="section reveal topic-projects" [class.in-view]="isTopicVisible('projects')">
+      <div class="section-heading">
+        <p class="section-label">{{ t().projectsLabel }}</p>
+        <h2>{{ t().projectsTitle }}</h2>
+      </div>
+
+      <div class="project-grid">
+        @for (project of t().projects; track project.title; let i = $index) {
+          <article class="project-card">
+            <p class="project-kind">{{ project.kind }}</p>
+            <h3>{{ project.title }}</h3>
+            <p><strong>{{ t().projectContextLabel }}:</strong> {{ project.context }}</p>
+            <p><strong>{{ t().projectBuiltLabel }}:</strong> {{ project.built }}</p>
+            <p><strong>{{ t().projectTechLabel }}:</strong> {{ project.tech }}</p>
+            <p><strong>{{ t().projectResultLabel }}:</strong> {{ project.result }}</p>
+            <button type="button" class="project-link" (click)="openProjectDetails(i)">{{ t().projectLink }}</button>
+          </article>
+        }
+      </div>
+    </section>
+
+    @if (selectedProject(); as project) {
+      <div class="project-overlay" (click)="closeProjectDetails()">
+        <article class="project-detail-panel" role="dialog" aria-modal="true" [attr.aria-label]="t().projectDetailsTitle" (click)="$event.stopPropagation()">
+          <button type="button" class="project-close" [attr.aria-label]="t().projectCloseLabel" (click)="closeProjectDetails()">
+            ✕
+          </button>
+
+          <p class="project-kind">{{ project.kind }}</p>
+          <h3 class="project-detail-title">{{ project.title }}</h3>
+
+          <div class="project-detail-grid">
+            <section>
+              <h4>{{ t().projectDetailsTitle }}</h4>
+              <p>{{ project.details }}</p>
+              <div class="project-detail-facts">
+                <p><strong>{{ t().projectContextLabel }}:</strong> {{ project.context }}</p>
+                <p><strong>{{ t().projectBuiltLabel }}:</strong> {{ project.built }}</p>
+                <p><strong>{{ t().projectResultLabel }}:</strong> {{ project.result }}</p>
+              </div>
+            </section>
+
+            <section>
+              <h4>{{ t().projectToolsLabel }}</h4>
+              <ul class="tool-list">
+                @for (tool of project.tools; track tool.name) {
+                  <li>
+                    <span class="tool-icon">{{ tool.icon }}</span>
+                    <span>{{ tool.name }}</span>
+                  </li>
+                }
+              </ul>
+            </section>
+          </div>
+        </article>
+      </div>
+    }
+
+    <section id="stack" data-topic="stack" class="section reveal topic-stack" [class.in-view]="isTopicVisible('stack')">
+      <div class="section-heading">
+        <p class="section-label">{{ t().stackLabel }}</p>
+        <h2>{{ t().stackTitle }}</h2>
+      </div>
+
+      <div class="skills-list-container">
+        <h3>{{ t().skillsTitle }}</h3>
+        <ul class="skills-grid">
+          @for (skill of t().skillsList; track skill) {
+            <li>{{ skill }}</li>
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="experiencia" data-topic="experience" class="section reveal topic-experience" [class.in-view]="isTopicVisible('experience')">
+      <div class="section-heading">
+        <p class="section-label">{{ t().expLabel }}</p>
+        <h2>{{ t().expTitle }}</h2>
+      </div>
+
+      <div class="experience-list">
+        @for (exp of t().experiences; track exp.company) {
+          <article class="experience-card">
+            <p class="experience-company">🏢 {{ exp.company }}</p>
+            <h3>{{ exp.role }}</h3>
+            <p class="experience-meta">{{ exp.periodLocation }}</p>
+
+            <h4>{{ t().expResponsibilitiesLabel }}</h4>
+            <ul>
+              @for (item of exp.responsibilities; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+
+            <h4>{{ t().expResultsLabel }}</h4>
+            <ul>
+              @for (item of exp.results; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section data-topic="impact" class="section reveal impact topic-impact" [class.in-view]="isTopicVisible('impact')">
+      <div class="section-heading">
+        <p class="section-label">{{ t().impactLabel }}</p>
+        <h2>{{ t().impactTitle }}</h2>
+      </div>
+      <ul class="impact-list">
+        @for (item of t().impacts; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </section>
+
+    <section id="contato" data-topic="contact" class="section reveal contact topic-contact" [class.in-view]="isTopicVisible('contact')">
+      <p class="section-label">{{ t().contactLabel }}</p>
+      <h2>{{ t().contactTitle }}</h2>
+      <p>{{ t().contactText }}</p>
+      <div class="hero-cta">
+        <a class="btn btn-secondary" href="https://www.linkedin.com/in/joao-victor-barletta-da-silva/" target="_blank" rel="noopener">
+          {{ t().openLinkedIn }}
+        </a>
+        <button class="btn btn-primary" type="button" (click)="toggleContactCard()">{{ t().contactButton }}</button>
+      </div>
+
+      @if (showContactCard()) {
+        <article class="contact-card" role="status" aria-live="polite">
+          <h3>{{ t().contactCardTitle }}</h3>
+          <p><strong>{{ t().contactEmailLabel }}:</strong> <a href="mailto:Barletta.contato@gmail.com?subject=Contato%20via%20portfolio">{{ t().contactEmailValue }}</a></p>
+          <p><strong>{{ t().contactPhoneLabel }}:</strong> <a href="tel:+5541996950668">{{ t().contactPhoneValue }}</a></p>
+          <a class="contact-send-link" href="mailto:Barletta.contato@gmail.com?subject=Contato%20via%20portfolio">{{ t().sendEmail }}</a>
+        </article>
+      }
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Joao Victor Barletta da Silva. {{ t().footer }}</p>
+  </footer>
+</div>
